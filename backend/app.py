@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -21,8 +21,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:5174",
-
-        ],
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -75,7 +74,7 @@ async def upload_image(file: UploadFile = File(...)):
 # Enhance API
 # ---------------------------------
 @app.post("/enhance")
-async def enhance(file: UploadFile = File(...)):
+async def enhance(request: Request, file: UploadFile = File(...)):
 
     # Save uploaded image
     upload_path = os.path.join(
@@ -86,14 +85,16 @@ async def enhance(file: UploadFile = File(...)):
     with open(upload_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Enhance image using AI
+    # Enhance image
     output_path = enhance_image(upload_path)
 
-    # Get only the filename
+    # Get filename
     filename = os.path.basename(output_path)
 
-    # Return URL for frontend
+    # Automatically detect Render or Localhost URL
+    base_url = str(request.base_url).rstrip("/")
+
     return {
         "status": "success",
-        "image_url": f"http://127.0.0.1:8000/outputs/{filename}"
+        "image_url": f"{base_url}/outputs/{filename}"
     }
