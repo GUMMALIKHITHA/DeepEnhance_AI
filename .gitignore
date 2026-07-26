@@ -1,0 +1,14 @@
+backend/venv/
+backend/uploads/
+backend/outputs/
+backend/__pycache__/
+
+frontend/node_modules/
+frontend/dist/
+
+*.pyc
+__pycache__/
+
+.vscode/
+
+Real-ESRGAN/

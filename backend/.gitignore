@@ -1,0 +1,13 @@
+venv/
+
+__pycache__/
+*.pyc
+
+uploads/
+outputs/
+
+models/*.pth
+
+.env
+
+.vscode/
